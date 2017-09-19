@@ -37,9 +37,9 @@ resource "aws_subnet" "subnet-001" {
 }
 
 
-#########################################
-# NACL
-#########################################
+#############################################################
+# NACL														#
+#############################################################
 
 ####################
 # Creating ACL
@@ -93,9 +93,9 @@ resource "aws_network_acl_rule" "Network-ACL-RuleOut" {
 
 ##############################################################################
 
-###########################################
-#             Security Group			  #
-###########################################
+#############################################################
+# Security Group											#
+#############################################################
 
 # Creating Security group
 resource "aws_security_group" "NSG-001" {
@@ -173,10 +173,9 @@ resource "aws_security_group_rule" "NSG-001-AnyOut" {
 
 ##############################################################################
 
-#####################################
-# 			Internet GW				#
-#####################################
-
+#############################################################
+# Internet GW												#
+#############################################################
 
 # Creating internet Gateway
 resource "aws_internet_gateway" "network-gw" {
@@ -187,7 +186,6 @@ resource "aws_internet_gateway" "network-gw" {
         Name        = "network-gw"
     }
 }
-
 
 # Creating route table
 resource "aws_route_table" "linux-default-route" {
@@ -224,6 +222,7 @@ resource "aws_nat_gateway" "Instance-EIP" {
 
 ##############################################################################
 
+
 ####################
 # Creating NIC
 ####################
@@ -251,12 +250,12 @@ resource aws_network_interface "NIC-VM" {
 
  #security_group_id       = "${aws_security_group.NSG-001.id}"
  #network_interface_id    = "${aws_network_interface.NIC-VM.id}"
- #network_interface_id = "${data.aws_instance.instance.network_interface_id}"
+ #network_interface_id 		= "${data.aws_instance.instance.network_interface_id}"
 #}
 
 
 ####################
-#VMs Creation
+# VMs Creation
 ####################
 
 # AWS Keypair
