@@ -20,6 +20,7 @@ variable "Region" {
 variable "AWSKeypair" {
   type 	   	= "string"
   default  	= "ssh-rsa **Key-RSA**"
+}
 
 variable "TagEnvironment" {
     type    = "string"
