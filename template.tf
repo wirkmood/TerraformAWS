@@ -26,7 +26,7 @@ resource "aws_subnet" "subnet-001" {
 
     vpc_id      = "${aws_vpc.vpc-001.id}"
     cidr_block  = "172.16.1.0/24"
-    #availability_zone = "eu-central-1"
+    availability_zone = "${var.AvailableAWS}"
     #map_public_ip_on_launch = true
 
     tags {
@@ -37,9 +37,9 @@ resource "aws_subnet" "subnet-001" {
 }
 
 
-#############################################################
-# NACL														#
-#############################################################
+#########################################
+# NACL
+#########################################
 
 ####################
 # Creating ACL
@@ -93,9 +93,9 @@ resource "aws_network_acl_rule" "Network-ACL-RuleOut" {
 
 ##############################################################################
 
-#############################################################
-# Security Group											#
-#############################################################
+###########################################
+#             Security Group			  #
+###########################################
 
 # Creating Security group
 resource "aws_security_group" "NSG-001" {
@@ -173,9 +173,10 @@ resource "aws_security_group_rule" "NSG-001-AnyOut" {
 
 ##############################################################################
 
-#############################################################
-# Internet GW												#
-#############################################################
+#####################################
+# 			Internet GW				#
+#####################################
+
 
 # Creating internet Gateway
 resource "aws_internet_gateway" "network-gw" {
@@ -188,7 +189,7 @@ resource "aws_internet_gateway" "network-gw" {
 }
 
 # Creating route table
-resource "aws_route_table" "linux-default-route" {
+resource "aws_route_table" "default-route" {
     vpc_id          = "${aws_vpc.vpc-001.id}" 	
     route {
         cidr_block  = "0.0.0.0/0"
@@ -197,45 +198,46 @@ resource "aws_route_table" "linux-default-route" {
     tags {
         environment = "${var.TagEnvironment}"
         usage       = "${var.TagUsage}"
-        Name        = "linux-default-route"
+        Name        = "default-route"
     }
 }
 
 # association subnet route table
 resource "aws_route_table_association" "Sub1-association" {
     subnet_id       = "${aws_subnet.subnet-001.id}"
-    route_table_id  = "${aws_route_table.linux-default-route.id}"
+    route_table_id  = "${aws_route_table.default-route.id}"
 }
 
+####################
+# Public IP Address
+####################
 
 # Creating Public IP VM
-resource "aws_eip" "Instance-EIP" {
-    vpc = true
-    network_interface = "${aws_network_interface.NIC-VM.id}"
+resource "aws_eip" "vm-eip" {
+    vpc 				= true
+    network_interface	= "${aws_network_interface.nic-vm.id}"
 }
 
 # Association between Subnet and EIP
-resource "aws_nat_gateway" "Instance-EIP" {
-    allocation_id = "${aws_eip.Instance-EIP.id}"
-    subnet_id = "${aws_subnet.subnet-001.id}"
-}
+#resource "aws_nat_gateway" "nat-eip" {
+#    allocation_id 	= "${aws_eip.vm-eip.id}"
+#    subnet_id 		= "${aws_subnet.subnet-001.id}"
+#}
 
 ##############################################################################
-
 
 ####################
 # Creating NIC
 ####################
 
 
-resource aws_network_interface "NIC-VM" {
+resource aws_network_interface "nic-vm" {
     subnet_id = "${aws_subnet.subnet-001.id}"
     private_ips = ["172.16.1.90"]
-
-    tags {
+	tags {
 		environment = "${var.TagEnvironment}"
 		usage       = "${var.TagUsage}"
-		Name        = "NIC-VM"
+		Name        = "nic-vm"
     }
 }
 
@@ -249,18 +251,18 @@ resource aws_network_interface "NIC-VM" {
 #resource "aws_network_interface_sg_attachment" "NIC-SGVM" {
 
  #security_group_id       = "${aws_security_group.NSG-001.id}"
- #network_interface_id    = "${aws_network_interface.NIC-VM.id}"
- #network_interface_id 		= "${data.aws_instance.instance.network_interface_id}"
+ #network_interface_id    = "${aws_network_interface.nic-vm.id}"
+ #network_interface_id 	  = "${data.aws_instance.instance.network_interface_id}"
 #}
 
 
 ####################
-# VMs Creation
+#VMs Creation
 ####################
 
 # AWS Keypair
-resource "aws_key_pair" "key-ssh" {
-  key_name   = "key-ssh"
+resource "aws_key_pair" "key-access" {
+  key_name   = "key-access"
   public_key = "${var.AWSKeypair}"
   }
    
@@ -269,9 +271,9 @@ resource "aws_instance" "VM-001" {
   ami 						= "${var.AMIId}"
   instance_type 			= "${var.VMsize}"
   #security_groups		    = "${aws_security_group.NSG-001.id}"
-  key_name 					= "${aws_key_pair.key-ssh.key_name}" 
+  key_name 					= "${aws_key_pair.key-access.key_name}" 
   network_interface {
-    network_interface_id 	= "${aws_network_interface.NIC-VM.id}"
+    network_interface_id 	= "${aws_network_interface.nic-vm.id}"
     device_index = 0
   }
   user_data 				= "${file("install_apache.sh")}"

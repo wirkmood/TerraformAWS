@@ -14,12 +14,17 @@ variable "AWSSecretKey" {
 
 variable "Region" {
  type 		= "string"
- default	= "eu-central-1"
+ default	= "eu-west-2"
+}
+
+variable "AvailableAWS" {
+ type		= "string"
+ default	= "eu-west-2a"
 }
 
 variable "AWSKeypair" {
   type 	   	= "string"
-  default  	= "ssh-rsa **Key-RSA**"
+  default  	= "ssh *RSA-PUBLIC-KEY*"
 }
 
 variable "TagEnvironment" {
@@ -34,11 +39,11 @@ variable "TagUsage" {
 
 variable "AMIId" {
   type		= "string"
-  #default  = "ami-657bd20a"  	#Linux AMI 
-  #default 	= "ami-c425e4ab"  	#Suse Linux
-  default 	= "ami-1e339e71"  	#ubuntu
-  #default 	= "ami-4703ad28"  	#windows
-  #default	= "ami-d74be5b8"	#redhat
+  default  	= "ami-489f8e2c"  	#Linux AMI 
+  #default 	= "ami-b1a2b2d5"  	#Suse Linux
+  #default 	= "ami-996372fd"  	#ubuntu
+  #default 	= "ami-03e7f667"  	#windows
+  #default	= "ami-a1f5e4c5"	#redhat
 }
   
  variable "VMsize" {
