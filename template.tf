@@ -1,5 +1,5 @@
 #########################################
-# Deployer une vm Linux avec terraform #
+# Deployer une vm Linux avec terraform  #
 #########################################
 
 ##############################################################################
@@ -9,7 +9,6 @@
 ######################
 # Creating Network
 ######################
-
 
 # Creating VPC / 172.16.0.0/16 
 resource "aws_vpc" "vpc-001" {
@@ -22,7 +21,6 @@ resource "aws_vpc" "vpc-001" {
         Name        = "vpc-001"
     }
 }
-
 
 # Creating Subnet with VPC
 resource "aws_subnet" "subnet-001" {
@@ -39,18 +37,14 @@ resource "aws_subnet" "subnet-001" {
     } 
 }
 
-
 ##############################################################################
 # Security networking
 ##############################################################################
 
 ######################
 # Network Access List
+# NACL ANY TO ANY
 ######################
-
-
-# Creating NACL ANY TO ANY
-
 
 # Network ACL associated in VPC network
 resource "aws_network_acl" "Network-ACL" {
@@ -71,7 +65,6 @@ resource "aws_network_acl" "Network-ACL" {
 resource "aws_network_acl_rule" "Network-ACL-RuleIn" {
     
     network_acl_id = "${aws_network_acl.Network-ACL.id}"
-
     rule_number = 1098
     egress = false
     protocol = "-1"
@@ -95,8 +88,6 @@ resource "aws_network_acl_rule" "Network-ACL-RuleOut" {
     to_port = "0"
 }
 
-
-
 ##############################################################################
 # Security port
 ##############################################################################
@@ -111,7 +102,6 @@ resource "aws_security_group" "NSG-001" {
     name = "NSG-001"
     description = "Security Group for vm"
     vpc_id = "${aws_vpc.vpc-001.id}"
-
     tags {
         environment = "${var.TagEnvironment}"
         usage       = "${var.TagUsage}"
@@ -236,7 +226,6 @@ resource "aws_eip" "vm-eip" {
 # Creating NIC
 ####################
 
-
 resource aws_network_interface "nic-vm" {
     subnet_id = "${aws_subnet.subnet-001.id}"
     private_ips = ["172.16.1.90"]
@@ -247,11 +236,9 @@ resource aws_network_interface "nic-vm" {
     }
 }
 
-
 ####################
 # NIC association
 ####################
-
 
 # NIC and SG association
 resource "aws_network_interface_sg_attachment" "NIC-SGVM" {
@@ -259,7 +246,6 @@ resource "aws_network_interface_sg_attachment" "NIC-SGVM" {
  security_group_id       = "${aws_security_group.NSG-001.id}"
  network_interface_id    = "${aws_network_interface.nic-vm.id}"
 }
-
 
 ##############################################################################
 # Instance configuration
@@ -281,19 +267,19 @@ resource "aws_key_pair" "key-access" {
   
 # Creating  VM
 resource "aws_instance" "VM-001" {
-  ami 						= "${var.AMIId}"
+  ami 					= "${var.AMIId}"
   instance_type 			= "${var.VMsize}"
-  #security_groups		    = "${aws_security_group.NSG-001.id}"
-  key_name 					= "${aws_key_pair.key-access.key_name}" 
+  #security_groups		    	= "${aws_security_group.NSG-001.id}"
+  key_name 				= "${aws_key_pair.key-access.key_name}" 
   network_interface {
-    network_interface_id 	= "${aws_network_interface.nic-vm.id}"
+    network_interface_id 		= "${aws_network_interface.nic-vm.id}"
     device_index = 0
   }
   user_data 				= "${file("install_apache.sh")}"
   tags {
     environment 			= "${var.TagEnvironment}"
     usage       			= "${var.TagUsage}"
-    Name 					= "${var.InstanceName}"
+    Name 				= "${var.InstanceName}"
   }
 }
 
