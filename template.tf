@@ -2,6 +2,9 @@
 # Deployer une vm Linux avec terraform #
 #########################################
 
+##############################################################################
+# Network
+##############################################################################
 
 ######################
 # Creating Network
@@ -37,13 +40,16 @@ resource "aws_subnet" "subnet-001" {
 }
 
 
-#########################################
-# NACL
-#########################################
+##############################################################################
+# Security networking
+##############################################################################
 
-####################
-# Creating ACL
-####################
+######################
+# Network Access List
+######################
+
+
+# Creating NACL ANY TO ANY
 
 
 # Network ACL associated in VPC network
@@ -59,9 +65,7 @@ resource "aws_network_acl" "Network-ACL" {
     }
 }
 
-#####################
 # Rule NACL group 
-#####################
 
 # ACL Rule In to Any
 resource "aws_network_acl_rule" "Network-ACL-RuleIn" {
@@ -91,11 +95,15 @@ resource "aws_network_acl_rule" "Network-ACL-RuleOut" {
     to_port = "0"
 }
 
+
+
+##############################################################################
+# Security port
 ##############################################################################
 
-###########################################
-#             Security Group			  #
-###########################################
+######################
+# Security Group
+######################
 
 # Creating Security group
 resource "aws_security_group" "NSG-001" {
@@ -111,12 +119,9 @@ resource "aws_security_group" "NSG-001" {
     }
 }
 
-#####################
 # Rule Security group 
-#####################
 
-
-# Rules for SG RDP In
+# Rules RDP
 resource "aws_security_group_rule" "NSG-001-RDPin" {
 
     type = "ingress"
@@ -149,7 +154,7 @@ resource "aws_security_group_rule" "NSG-001-HTTPSIn" {
     security_group_id = "${aws_security_group.NSG-001.id}"
 }
 
-# Rules for SG SSH In
+# Rules SSH
 resource "aws_security_group_rule" "NSG-001-SSHIn" {
 
     type = "ingress"
@@ -172,11 +177,12 @@ resource "aws_security_group_rule" "NSG-001-AnyOut" {
 }
 
 ##############################################################################
+# Routing
+##############################################################################
 
-#####################################
-# 			Internet GW				#
-#####################################
-
+######################
+# Internet GW				
+######################
 
 # Creating internet Gateway
 resource "aws_internet_gateway" "network-gw" {
@@ -187,6 +193,10 @@ resource "aws_internet_gateway" "network-gw" {
         Name        = "network-gw"
     }
 }
+
+######################
+# Routing table				
+######################
 
 # Creating route table
 resource "aws_route_table" "default-route" {
@@ -218,12 +228,8 @@ resource "aws_eip" "vm-eip" {
     network_interface	= "${aws_network_interface.nic-vm.id}"
 }
 
-# Association between Subnet and EIP
-#resource "aws_nat_gateway" "nat-eip" {
-#    allocation_id 	= "${aws_eip.vm-eip.id}"
-#    subnet_id 		= "${aws_subnet.subnet-001.id}"
-#}
-
+##############################################################################
+# NIC 
 ##############################################################################
 
 ####################
@@ -248,16 +254,19 @@ resource aws_network_interface "nic-vm" {
 
 
 # NIC and SG association
-#resource "aws_network_interface_sg_attachment" "NIC-SGVM" {
+resource "aws_network_interface_sg_attachment" "NIC-SGVM" {
 
- #security_group_id       = "${aws_security_group.NSG-001.id}"
- #network_interface_id    = "${aws_network_interface.nic-vm.id}"
- #network_interface_id 	  = "${data.aws_instance.instance.network_interface_id}"
-#}
+ security_group_id       = "${aws_security_group.NSG-001.id}"
+ network_interface_id    = "${aws_network_interface.nic-vm.id}"
+}
 
+
+##############################################################################
+# Instance configuration
+##############################################################################
 
 ####################
-#VMs Creation
+# Import SSH KEY
 ####################
 
 # AWS Keypair
@@ -265,7 +274,11 @@ resource "aws_key_pair" "key-access" {
   key_name   = "key-access"
   public_key = "${var.AWSKeypair}"
   }
-   
+  
+####################
+# Instance Creation
+####################
+  
 # Creating  VM
 resource "aws_instance" "VM-001" {
   ami 						= "${var.AMIId}"
@@ -284,15 +297,14 @@ resource "aws_instance" "VM-001" {
   }
 }
 
-
 ####################
 # Out
 ####################
 
-output "Public IP linux1" {
+output "Public IP instance" {
   value = "${aws_instance.VM-001.public_ip}"
 }
 
-output "Private IP  linux1" {
+output "Private IP  instance" {
   value = "${aws_instance.VM-001.private_ip}"
 }
