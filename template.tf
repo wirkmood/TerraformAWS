@@ -14,7 +14,6 @@
 resource "aws_vpc" "vpc-001" {
 
     cidr_block = "172.16.0.0/16"
-
      tags {
         environment = "${var.TagEnvironment}"
         usage       = "${var.TagUsage}"
@@ -24,12 +23,10 @@ resource "aws_vpc" "vpc-001" {
 
 # Creating Subnet with VPC
 resource "aws_subnet" "subnet-001" {
-
-    vpc_id      = "${aws_vpc.vpc-001.id}"
-    cidr_block  = "172.16.1.0/24"
-    availability_zone = "${var.AvailableAWS}"
-    #map_public_ip_on_launch = true
-
+	
+    vpc_id      	= "${aws_vpc.vpc-001.id}"
+    cidr_block  	= "172.16.1.0/24"
+    availability_zone 	= "${var.AvailableAWS}"
     tags {
         environment = "${var.TagEnvironment}"
         usage       = "${var.TagUsage}"
@@ -49,8 +46,8 @@ resource "aws_subnet" "subnet-001" {
 # Network ACL associated in VPC network
 resource "aws_network_acl" "Network-ACL" {
 
-    vpc_id = "${aws_vpc.vpc-001.id}"
-    subnet_ids = ["${aws_subnet.subnet-001.id}"]
+    vpc_id 	= "${aws_vpc.vpc-001.id}"
+    subnet_ids 	= ["${aws_subnet.subnet-001.id}"]
 
     tags {
         environment = "${var.TagEnvironment}"
@@ -66,12 +63,12 @@ resource "aws_network_acl_rule" "Network-ACL-RuleIn" {
     
     network_acl_id = "${aws_network_acl.Network-ACL.id}"
     rule_number = 1098
-    egress = false
-    protocol = "-1"
+    egress 	= false
+    protocol 	= "-1"
     rule_action = "allow"
-    cidr_block = "0.0.0.0/0"
-    from_port = "0"
-    to_port = "0"
+    cidr_block 	= "0.0.0.0/0"
+    from_port 	= "0"
+    to_port 	= "0"
 
 }
 
@@ -80,12 +77,12 @@ resource "aws_network_acl_rule" "Network-ACL-RuleOut" {
     
     network_acl_id = "${aws_network_acl.Network-ACL.id}"
     rule_number = 1099
-    egress = true
-    protocol = "-1"
+    egress 	= true
+    protocol 	= "-1"
     rule_action = "allow"
-    cidr_block = "0.0.0.0/0"
-    from_port = "0"
-    to_port = "0"
+    cidr_block 	= "0.0.0.0/0"
+    from_port 	= "0"
+    to_port 	= "0"
 }
 
 ##############################################################################
@@ -114,10 +111,10 @@ resource "aws_security_group" "NSG-001" {
 # Rules RDP
 resource "aws_security_group_rule" "NSG-001-RDPin" {
 
-    type = "ingress"
-    from_port = 3389
-    to_port = 3389
-    protocol = "tcp"
+    type	= "ingress"
+    from_port 	= 3389
+    to_port 	= 3389
+    protocol 	= "tcp"
     cidr_blocks = ["0.0.0.0/0"]
     security_group_id = "${aws_security_group.NSG-001.id}"   
 }
@@ -125,10 +122,10 @@ resource "aws_security_group_rule" "NSG-001-RDPin" {
 # HTTP RULE
 resource "aws_security_group_rule" "NSG-001-HTTPIn" {
 
-    type = "ingress"
-    from_port = 80
-    to_port = 80
-    protocol = "tcp"
+    type 	= "ingress"
+    from_port 	= 80
+    to_port 	= 80
+    protocol 	= "tcp"
     cidr_blocks = ["0.0.0.0/0"]
     security_group_id = "${aws_security_group.NSG-001.id}"
 }
@@ -136,10 +133,10 @@ resource "aws_security_group_rule" "NSG-001-HTTPIn" {
 # HTTPS RULE
 resource "aws_security_group_rule" "NSG-001-HTTPSIn" {
 
-    type = "ingress"
-    from_port = 443
-    to_port = 443
-    protocol = "tcp"
+    type 	= "ingress"
+    from_port 	= 443
+    to_port 	= 443
+    protocol 	= "tcp"
     cidr_blocks = ["0.0.0.0/0"]
     security_group_id = "${aws_security_group.NSG-001.id}"
 }
@@ -147,10 +144,10 @@ resource "aws_security_group_rule" "NSG-001-HTTPSIn" {
 # Rules SSH
 resource "aws_security_group_rule" "NSG-001-SSHIn" {
 
-    type = "ingress"
-    from_port = 22
-    to_port = 22
-    protocol = "tcp"
+    type 	= "ingress"
+    from_port 	= 22
+    to_port 	= 22
+    protocol 	= "tcp"
     cidr_blocks = ["0.0.0.0/0"]
     security_group_id = "${aws_security_group.NSG-001.id}"   
 }
@@ -158,10 +155,10 @@ resource "aws_security_group_rule" "NSG-001-SSHIn" {
 # Rule to Any 
 resource "aws_security_group_rule" "NSG-001-AnyOut" {
 
-    type = "egress"
-    from_port = 0
-    to_port = 0
-    protocol = "-1"
+    type 	= "egress"
+    from_port 	= 0
+    to_port 	= 0
+    protocol 	= "-1"
     cidr_blocks = ["0.0.0.0/0"]
     security_group_id = "${aws_security_group.NSG-001.id}"	
 }
