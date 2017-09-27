@@ -211,7 +211,7 @@ resource "aws_route_table_association" "Sub1-association" {
 
 # Creating Public IP VM
 resource "aws_eip" "vm-eip" {
-    vpc 				= true
+    vpc 		= true
     network_interface	= "${aws_network_interface.nic-vm.id}"
 }
 
