@@ -15,7 +15,7 @@
   * Startup Script (Bash scripting)
 Doc : 
 * https://www.terraform.io/docs/providers/aws
-* https://aws.amazon.com/fr/documentation
+* https://aws.amazon.com/documentation
 </b>
   
 <b>Prerequisite : </b>
