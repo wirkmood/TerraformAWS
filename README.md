@@ -36,7 +36,7 @@
 - You can change some parameters with yours. (IP network / Subnet / IP NIC instance) Also you can create yours statics variables into variable.tf
 
 <b>3) install terraform on linux / windows / Mac </b>
-- Download terraform -
+- Download the lastest terraform version
   * https://www.terraform.io/downloads.html
 - Lunch terraform installation 
   * excecute terraform init
