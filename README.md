@@ -1,37 +1,47 @@
 ## Welcome to GitHub Pages
 
-You can use the [editor on GitHub](https://github.com/wirkmood/TerraformAWS/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+This script deploy a full infrastructure on AWS with terraform tools.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+- Network :
+  * Networking 
+  * Subnetwork
+  * Public IP
+  * NIC
+- Security :
+  * Network Access List
+  * Security Group (Allow SSH / RDP / HTTP / HTTPS into inbound)
+  * Import a SSH KEY
+- Instance 
+  * Images 
+  * VMsize
+  * Startup Script ( Bash scripting)
+  
+Prerequisite : 
 
-### Markdown
+1) edit variable.tf
+- Fill out with your AWS login : 
+  * Access Key
+  * Security Key
+- SSH Key :
+  * Generate RSA Key and export the private and public key with putty gen  (https://www.ssh.com/ssh/keygen/)
+  * Copy the RSA key by the new one into "AWSKeypair" variable
+- Choise the image 
+  * Uncomment the AMIID to select your AMIID disared. (maybe you would change AMIId variable by what AWS propose you)
+  * Example : default 	= "ami-1e339e71"  	#ubuntu
+- VM Size :
+  * By default VMsize is t2.micro for free instances
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+2) edit template.tf 
+- You can change some parameters with yours. (IP network / Subnet / IP NIC instance) Also you can create yours statics variables into variable.tf
 
-```markdown
-Syntax highlighted code block
+3) install terraform on linux / windows / Mac
+- Download terraform -
+  * https://www.terraform.io/downloads.html
+- Lunch terraform installation 
+  * excecute terraform init
 
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/wirkmood/TerraformAWS/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+4) Start the script
+- Deploy your infrastructure 
+  * Lunch terraform apply (you can check the config with terraform plan)
+- Destroy your infrastructure
+  * terraform destroy
