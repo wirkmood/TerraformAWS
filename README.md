@@ -1,5 +1,3 @@
-## Welcome to GitHub Pages
-
 <b>This script deploy a full infrastructure on AWS with terraform tools.</b>
 <b>
 - Network :
@@ -19,7 +17,7 @@
   
 <b>Prerequisite : </b>
 
-<b>1) edit variable.tf </b>
+<b>1) Edit variable.tf </b>
 - Fill out with your AWS login : 
   * Access Key
   * Security Key
@@ -32,10 +30,10 @@
 - VM Size :
   * By default VMsize is t2.micro for free instances
 
-<b>2) edit template.tf </b>
+<b>2) Edit template.tf </b>
 - You can change some parameters with yours. (IP network / Subnet / IP NIC instance) Also you can create yours statics variables into variable.tf
 
-<b>3) install terraform on linux / windows / Mac </b>
+<b>3) Install terraform on linux / windows / Mac </b>
 - Download the lastest terraform version
   * https://www.terraform.io/downloads.html
 - Lunch terraform installation 
