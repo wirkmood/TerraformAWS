@@ -1,6 +1,6 @@
 ## Welcome to GitHub Pages
 
-This script deploy a full infrastructure on AWS with terraform tools.
+<b>This script deploy a full infrastructure on AWS with terraform tools.</b>
 
 - Network :
   * Networking 
