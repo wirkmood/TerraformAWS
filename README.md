@@ -12,7 +12,10 @@
 - Instance 
   * Images 
   * VMsize
-  * Startup Script ( Bash scripting)
+  * Startup Script (Bash scripting)
+Doc : 
+* https://www.terraform.io/docs/providers/aws
+* https://aws.amazon.com/fr/documentation
 </b>
   
 <b>Prerequisite : </b>
@@ -45,7 +48,3 @@
   * Check on AWS Portal
 - Destroy your infrastructure
   * </b>terraform destroy<b>
- 
-Doc : 
-  https://www.terraform.io/docs/providers/aws/
-  https://aws.amazon.com/fr/documentation/
