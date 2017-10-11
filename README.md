@@ -47,4 +47,4 @@ Doc :
   * Lunch <b>terraform apply</b> (you can check the config with terraform plan)
   * Check on AWS Portal
 - Destroy your infrastructure
-  * </b>terraform destroy<b>
+  * <b>terraform destroy</b>
